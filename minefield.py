@@ -8,9 +8,9 @@ class Minefield:
         self.width = width
         self.height = height
         self.mines_amount = mines_amount
+        # self.flagged_mines = 0  Todo implement this
         self.grid = []
         self.generate_grid(screen)
-        self.generate_mines()   #ToDo - move this line after first click
 
     def generate_grid(self, screen):
         for j in range(self.height):
@@ -21,10 +21,13 @@ class Minefield:
                 element.draw()
             self.grid.append(line)
 
-    def generate_mines(self):
+    def generate_mines(self, excluded_i, excluded_j):
         for _ in range(self.mines_amount):
-            i = random.randrange(0, self.width)
-            j = random.randrange(0, self.height)
+            i = excluded_i
+            j = excluded_j
+            while i == excluded_i and j == excluded_j:
+                i = random.randrange(0, self.width)
+                j = random.randrange(0, self.height)
             print('Mine: ', i, j)
             self.grid[i][j].mine = True
 
