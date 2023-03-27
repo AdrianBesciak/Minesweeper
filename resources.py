@@ -1,5 +1,9 @@
 from pygame import image
 
+element_size = 32
+border = 16
+top_border = 100
+
 img_empty_field = image.load("img/empty.png")
 img_flag = image.load("img/flag.png")
 img_element = image.load("img/Grid.png")

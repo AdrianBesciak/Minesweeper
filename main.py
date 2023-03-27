@@ -1,35 +1,22 @@
 # Example file showing a basic pygame "game loop"
-import random
 
 import pygame
 import resources
 from element import Element
+from minefield import Minefield
 
-field_width = 20
-field_height = 20
+field_width = 10
+field_height = 10
 mines_amount = 10
-element_size = 32
-border = 16
-top_border = 100
+
 
 # pygame setup
 pygame.init()
-display_width = element_size * field_width + border * 2
-display_height = element_size * field_height + border + top_border
+display_width = resources.element_size * field_width + resources.border * 2
+display_height = resources.element_size * field_height + resources.border + resources.top_border
 screen = pygame.display.set_mode((display_width, display_height))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Minesweeper")
-
-grid = []
-mines = []
-
-
-def generate_minefield():
-    for _ in range(mines_amount):
-        print('Mine: ', i, j)
-        i = random.randrange(0, field_width)
-        j = random.randrange(0, field_height)
-        grid[i][j].flag = True
 
 
 def game():
@@ -39,13 +26,7 @@ def game():
         if event.type == pygame.QUIT:
             running = False
 
-    for j in range(field_height):
-        line = []
-        for i in range(field_width):
-            element = Element(i, j, element_size, border, top_border, is_mine=True, screen=screen)
-            line.append(element)
-            element.draw()
-        grid.append(line)
+    minefield = Minefield(field_width, field_height, mines_amount, screen)
 
     game_state = "Running"
     while game_state != "Exit":
@@ -55,11 +36,13 @@ def game():
             if event.type == pygame.QUIT:
                 game_state = "Exit"
             elif event.type == pygame.MOUSEBUTTONUP:
-                for row in grid:
+                for row in minefield.grid:
                     for element in row:
                         if element.rect.collidepoint(event.pos):
                             if event.button == 1:
-                                element.click()
+                                mines_in_neighbourhood = minefield.count_neighbours(minefield.grid.index(row),
+                                                                                    row.index(element))
+                                element.click(mines_in_neighbourhood)
                             elif event.button == 3:
                                 element.flag_marked()
 
