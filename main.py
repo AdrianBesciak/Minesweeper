@@ -2,11 +2,10 @@
 
 import pygame
 import resources
-from element import Element
 from minefield import Minefield
 
-field_width = 10
-field_height = 10
+field_width = 15
+field_height = 15
 mines_amount = 10
 
 
@@ -40,9 +39,12 @@ def game():
                     for element in row:
                         if element.rect.collidepoint(event.pos):
                             if event.button == 1:
-                                mines_in_neighbourhood = minefield.count_neighbours(minefield.grid.index(row),
-                                                                                    row.index(element))
-                                element.click(mines_in_neighbourhood)
+                                row_index = minefield.grid.index(row)
+                                column_index = row.index(element)
+                                mines_in_neighbourhood = minefield.count_neighbours(row_index, column_index)
+                                clicked = element.click(mines_in_neighbourhood)
+                                if clicked:
+                                    minefield.uncover_neighbours(row_index, column_index)   #Todo isn't this a bug if we will click on flag?
                             elif event.button == 3:
                                 element.flag_marked()
 

@@ -39,6 +39,7 @@ class Element:
                     self.draw(resources.img_element7)
                 elif mined_neighbours == 8:
                     self.draw(resources.img_element8)
+        return self.clicked
 
     def flag_marked(self):
         if self.clicked and self.flag:
@@ -52,3 +53,6 @@ class Element:
 
     def is_mine(self):
         return self.mine
+
+    def is_clicked(self):
+        return self.clicked
