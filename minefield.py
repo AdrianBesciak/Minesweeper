@@ -8,7 +8,7 @@ class Minefield:
         self.width = width
         self.height = height
         self.mines_amount = mines_amount
-        # self.flagged_mines = 0  Todo implement this
+        self.flagged_mines = 0
         self.grid = []
         self.generate_grid(screen)
 
@@ -70,3 +70,9 @@ class Minefield:
                     for i, j in neighbours:
                         if not self.grid[i][j].is_clicked():
                             q.append((i, j))
+
+    def flagged_mine(self):
+        self.flagged_mines += 1
+
+    def unflagged_mine(self):
+        self.flagged_mines -= 1

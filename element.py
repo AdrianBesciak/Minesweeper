@@ -1,5 +1,6 @@
 import pygame
 import resources
+import game_state
 
 
 class Element:
@@ -20,6 +21,7 @@ class Element:
             self.clicked = True
             if self.mine:
                 self.draw(resources.img_mineClicked)
+                game_state.state = game_state.GameState.FAILED
             else:
                 if mined_neighbours == 0:
                     self.draw(resources.img_empty_field)
@@ -46,10 +48,13 @@ class Element:
             self.clicked = False
             self.flag = False
             self.draw()
+            return False
+
         elif not self.clicked:
             self.draw(resources.img_flag)
             self.flag = True
             self.clicked = True
+            return True
 
     def is_mine(self):
         return self.mine

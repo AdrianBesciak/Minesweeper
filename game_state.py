@@ -7,3 +7,7 @@ class GameState(Enum):
     WON = 3
     FAILED = 4
     EXIT = 5
+
+
+global state
+state = GameState.NOT_STARTED
