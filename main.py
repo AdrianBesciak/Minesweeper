@@ -38,6 +38,7 @@ def game():
                 if game_state.state == game_state.GameState.FAILED or game_state.state == game_state.GameState.WON:
                     minefield = Minefield(field_width, field_height, mines_amount, screen)
                     game_state.state = game_state.GameState.NOT_STARTED
+                    continue
                 for row in minefield.grid:
                     for element in row:
                         if element.rect.collidepoint(event.pos):
