@@ -8,7 +8,7 @@ from timer import Timer
 
 field_width = 15
 field_height = 15
-mines_amount = 30
+mines_amount = 10
 
 
 # pygame setup
@@ -62,10 +62,7 @@ def game():
                                 if clicked:
                                     minefield.uncover_neighbours(row_index, column_index)   #Todo isn't this a bug if we will click on flag?
                             elif event.button == 3:
-                                if element.flag_marked():
-                                    minefield.flagged_mine()
-                                else:
-                                    minefield.unflagged_mine()
+                                element.flag_marked()
                             print(minefield.flagged_mines)
         if minefield.flagged_mines == minefield.mines_amount:
             game_state.state = game_state.GameState.WON

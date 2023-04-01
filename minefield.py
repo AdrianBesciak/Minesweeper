@@ -8,17 +8,17 @@ class Minefield:
     def __init__(self, width, height, mines_amount, screen, font):
         self.width = width
         self.height = height
+        self.mines_counter = MinesCounter(screen, font)
         self.mines_amount = mines_amount
         self.flagged_mines = 0
         self.grid = []
         self.generate_grid(screen)
-        self.mines_counter = MinesCounter(screen, font)
 
     def generate_grid(self, screen):
         for j in range(self.height):
             line = []
             for i in range(self.width):
-                element = Element(i, j, resources.element_size, resources.border, resources.top_border, screen=screen)
+                element = Element(i, j, self.mines_counter, resources.element_size, resources.border, resources.top_border, screen=screen)
                 line.append(element)
                 element.draw()
             self.grid.append(line)
@@ -27,7 +27,7 @@ class Minefield:
         for _ in range(self.mines_amount):
             i = excluded_i
             j = excluded_j
-            while i == excluded_i and j == excluded_j:
+            while i == excluded_i and j == excluded_j and not self.grid[i][j].mine:
                 i = random.randrange(0, self.width)
                 j = random.randrange(0, self.height)
             print('Mine: ', i, j)
@@ -73,9 +73,3 @@ class Minefield:
                         if not self.grid[i][j].is_clicked():
                             q.append((i, j))
 
-    def flagged_mine(self):
-        self.mines_counter.added_flag()
-
-
-    def unflagged_mine(self):
-        self.mines_counter.deleted_flag()

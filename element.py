@@ -4,7 +4,7 @@ import game_state
 
 
 class Element:
-    def __init__(self, x, y, field_size, border_size, top_border_size, screen):
+    def __init__(self, x, y, mines_counter, field_size, border_size, top_border_size, screen):
         self.x = x
         self.y = y
         self.clicked = False
@@ -12,6 +12,7 @@ class Element:
         self.flag = False
         self.rect = pygame.Rect(border_size + self.x * field_size, top_border_size + self.y * field_size, field_size, field_size)
         self.screen = screen
+        self.mines_counter = mines_counter
 
     def draw(self, resource=resources.img_element):
         self.screen.blit(resource, self.rect)
@@ -48,12 +49,14 @@ class Element:
             self.clicked = False
             self.flag = False
             self.draw()
+            self.mines_counter.deleted_flag()
             return False
 
         elif not self.clicked:
             self.draw(resources.img_flag)
             self.flag = True
             self.clicked = True
+            self.mines_counter.added_flag()
             return True
 
     def is_mine(self):
