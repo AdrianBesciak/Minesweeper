@@ -1,16 +1,18 @@
 from element import Element
 import resources
 import random
+from MinesCounter import MinesCounter
 
 
 class Minefield:
-    def __init__(self, width, height, mines_amount, screen):
+    def __init__(self, width, height, mines_amount, screen, font):
         self.width = width
         self.height = height
         self.mines_amount = mines_amount
         self.flagged_mines = 0
         self.grid = []
         self.generate_grid(screen)
+        self.mines_counter = MinesCounter(screen, font)
 
     def generate_grid(self, screen):
         for j in range(self.height):
@@ -72,7 +74,8 @@ class Minefield:
                             q.append((i, j))
 
     def flagged_mine(self):
-        self.flagged_mines += 1
+        self.mines_counter.added_flag()
+
 
     def unflagged_mine(self):
-        self.flagged_mines -= 1
+        self.mines_counter.deleted_flag()

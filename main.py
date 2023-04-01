@@ -29,7 +29,7 @@ def game():
         if event.type == pygame.QUIT:
             running = False
 
-    minefield = Minefield(field_width, field_height, mines_amount, screen)
+    minefield = Minefield(field_width, field_height, mines_amount, screen, font)
     game_timer.print()
 
     while game_state.state != game_state.GameState.EXIT:
@@ -43,7 +43,7 @@ def game():
                 game_timer.update()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if game_state.state == game_state.GameState.FAILED or game_state.state == game_state.GameState.WON:
-                    minefield = Minefield(field_width, field_height, mines_amount, screen)
+                    minefield = Minefield(field_width, field_height, mines_amount, screen, font)
                     game_timer.reset()
                     game_state.state = game_state.GameState.NOT_STARTED
                     continue
