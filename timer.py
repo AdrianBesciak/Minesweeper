@@ -5,6 +5,8 @@ import resources
 
 class Timer:
     def __init__(self, screen, font):
+        self.timer_width = 60
+        self.timer_height = 30
         self.timer = 0
         self.screen = screen
         self.font = font
@@ -26,6 +28,9 @@ class Timer:
         self.print()
 
     def print(self):
-        text = str(self.timer)
-        self.screen.fill((0, 0, 0), (resources.border, resources.border, 60, 30))
-        self.screen.blit(self.font.render(text, True, (250, 250, 250)), (resources.border, resources.border))
+        window_size = pygame.display.get_window_size()
+        text = '{:03d}'.format(self.timer)
+        self.screen.fill((0, 0, 0), (
+        window_size[0] - resources.border - self.timer_width, resources.border, self.timer_width, self.timer_height))
+        self.screen.blit(self.font.render(text, True, (250, 250, 250)),
+                         (window_size[0] - resources.border - self.timer_width, resources.border))
