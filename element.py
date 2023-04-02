@@ -4,7 +4,7 @@ import game_state
 
 
 class Element:
-    def __init__(self, x, y, mines_counter, field_size, border_size, top_border_size, screen):
+    def __init__(self, x, y, mines_counter, minefield, field_size, border_size, top_border_size, screen):
         self.x = x
         self.y = y
         self.clicked = False
@@ -13,6 +13,7 @@ class Element:
         self.rect = pygame.Rect(border_size + self.x * field_size, top_border_size + self.y * field_size, field_size, field_size)
         self.screen = screen
         self.mines_counter = mines_counter
+        self.minefield = minefield
 
     def draw(self, resource=resources.img_element):
         self.screen.blit(resource, self.rect)
@@ -20,9 +21,11 @@ class Element:
     def click(self, mined_neighbours):
         if not self.clicked:
             self.clicked = True
+            self.minefield.uncovered_fields += 1
             if self.mine:
-                self.draw(resources.img_mineClicked)
                 game_state.state = game_state.GameState.FAILED
+                self.minefield.uncover_whole_field()
+                self.draw(resources.img_mineClicked)
             else:
                 if mined_neighbours == 0:
                     self.draw(resources.img_empty_field)
@@ -43,6 +46,16 @@ class Element:
                 elif mined_neighbours == 8:
                     self.draw(resources.img_element8)
         return self.clicked
+
+    def final_click(self):
+        if self.clicked:
+            return
+        if game_state.state == game_state.GameState.WON:
+            if self.mine:
+                self.draw(resources.img_flag)
+        else:
+            if self.mine:
+                self.draw(resources.img_mine)
 
     def flag_marked(self):
         if self.clicked and self.flag:

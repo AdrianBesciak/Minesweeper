@@ -8,17 +8,18 @@ class Minefield:
     def __init__(self, width, height, mines_amount, screen, font):
         self.width = width
         self.height = height
-        self.mines_counter = MinesCounter(screen, font)
+        self.mines_counter = MinesCounter(mines_amount, screen, font)
         self.mines_amount = mines_amount
         self.flagged_mines = 0
         self.grid = []
+        self.uncovered_fields = 0
         self.generate_grid(screen)
 
     def generate_grid(self, screen):
         for j in range(self.height):
             line = []
             for i in range(self.width):
-                element = Element(i, j, self.mines_counter, resources.element_size, resources.border, resources.top_border, screen=screen)
+                element = Element(i, j, self.mines_counter, self, resources.element_size, resources.border, resources.top_border, screen=screen)
                 line.append(element)
                 element.draw()
             self.grid.append(line)
@@ -31,7 +32,7 @@ class Minefield:
                 i = random.randrange(0, self.width)
                 j = random.randrange(0, self.height)
             print('Mine: ', i, j)
-            self.grid[i][j].mine = True
+            self.grid[j][i].mine = True
 
     def get_neighbours(self, i, j):
         neighbours = []
@@ -73,3 +74,11 @@ class Minefield:
                         if not self.grid[i][j].is_clicked():
                             q.append((i, j))
 
+    def uncover_whole_field(self):
+        for i in range(len(self.grid)):
+            for j in range(len(self.grid[i])):
+                self.grid[i][j].final_click()
+                self.uncover_neighbours(i, j)
+
+    def is_game_won(self):
+        return self.uncovered_fields == self.width * self.height - self.mines_amount

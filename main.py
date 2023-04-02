@@ -6,8 +6,8 @@ from minefield import Minefield
 import game_state
 from timer import Timer
 
-field_width = 15
-field_height = 15
+field_width = 30
+field_height = 16
 mines_amount = 10
 
 
@@ -61,11 +61,15 @@ def game():
                                 clicked = element.click(mines_in_neighbourhood)
                                 if clicked:
                                     minefield.uncover_neighbours(row_index, column_index)   #Todo isn't this a bug if we will click on flag?
+                                minefield.is_game_won()
+                                if minefield.is_game_won():
+                                    game_state.state = game_state.GameState.WON
+                                    minefield.uncover_whole_field()
+                                    minefield.mines_counter.game_won()
+                                    print("Game WON!!!")
                             elif event.button == 3:
                                 element.flag_marked()
                             print(minefield.flagged_mines)
-        if minefield.flagged_mines == minefield.mines_amount:
-            game_state.state = game_state.GameState.WON
 
         if game_state.state != game_state.GameState.IN_PROGRESS:
             game_timer.stop()
