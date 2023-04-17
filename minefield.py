@@ -62,23 +62,23 @@ class Minefield:
             mined_neighbours += self.grid[row][column].is_mine()
         return mined_neighbours
 
-    def uncover_neighbours(self, i_begin, j_begin):
+    def uncover_neighbours(self, i_begin, j_begin, state_icon):
         q = [(i_begin, j_begin)]
         while len(q) > 0:
             row, column = q.pop()
             if not self.grid[row][column].is_mine():
-                self.grid[row][column].click(self.count_mined_neighbours(row, column))
+                self.grid[row][column].click(self.count_mined_neighbours(row, column), state_icon)
                 if self.count_mined_neighbours(row, column) == 0:
                     neighbours = self.get_neighbours(row, column)
                     for i, j in neighbours:
                         if not self.grid[i][j].is_clicked():
                             q.append((i, j))
 
-    def uncover_whole_field(self):
+    def uncover_whole_field(self, state_icon):
         for i in range(len(self.grid)):
             for j in range(len(self.grid[i])):
-                self.grid[i][j].final_click()
-                self.uncover_neighbours(i, j)
+                self.grid[i][j].final_click(state_icon)
+                self.uncover_neighbours(i, j, state_icon)
 
     def is_game_won(self):
         return self.uncovered_fields == self.width * self.height - self.mines_amount
