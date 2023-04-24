@@ -25,6 +25,36 @@ class GameState:
     def set_state(self, new_state):
         self.state = new_state
 
+    def set_quit(self):
+        self.state = GameState.States.EXIT
+
+    def quit(self):
+        return self.state == GameState.States.EXIT
+
+    def is_finished(self):
+        return self.state == GameState.States.FAILED or self.state == GameState.States.WON
+
+    def is_not_started(self):
+        return self.state == GameState.States.NOT_STARTED
+
+    def is_in_progress(self):
+        return self.state == GameState.States.IN_PROGRESS
+
+    def start_game(self):
+        self.state = GameState.States.IN_PROGRESS
+
+    def win_game(self):
+        self.state = GameState.States.WON
+
+    def is_game_won(self):
+        return self.state == GameState.States.WON
+
+    def fail_game(self):
+        self.state = GameState.States.FAILED
+
+    def reset_game(self):
+        self.state = GameState.States.NOT_STARTED
+
     def draw(self):
         if self.state == self.States.NOT_STARTED:
             self.screen.blit(resources.img_big_element, self.rect)

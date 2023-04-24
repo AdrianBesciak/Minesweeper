@@ -3,7 +3,7 @@
 import pygame
 import resources
 from minefield import Minefield
-import game_state
+from game_state import GameState
 from timer import Timer
 
 field_width = 30
@@ -23,59 +23,53 @@ game_timer = Timer(screen=screen, font=font)
 
 
 def game():
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
     minefield = Minefield(field_width, field_height, mines_amount, screen, font)
     game_timer.print()
-    state_icon = game_state.GameState(screen)
+    state = GameState(screen)
 
-    while state_icon.state != game_state.GameState.States.EXIT:
+    while not state.quit():
         # limits FPS to 60
         clock.tick(60) / 1000
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                state_icon.state = game_state.GameState.States.EXIT
+                state.set_quit()
             elif event.type == pygame.USEREVENT:
                 game_timer.update()
             elif event.type == pygame.MOUSEBUTTONUP:
-                if state_icon.is_clicked(event.pos) or state_icon.state == game_state.GameState.States.FAILED or state_icon.state == game_state.GameState.States.WON:
+                if state.is_clicked(event.pos) or state.is_finished():
                     minefield = Minefield(field_width, field_height, mines_amount, screen, font)
                     game_timer.reset()
-                    state_icon.state = game_state.GameState.States.NOT_STARTED
+                    state.reset_game()
                     continue
                 for row in minefield.grid:
                     for element in row:
                         if element.rect.collidepoint(event.pos):
                             row_index = minefield.grid.index(row)
                             column_index = row.index(element)
-                            if state_icon.state == game_state.GameState.States.NOT_STARTED:
-                                state_icon.state = game_state.GameState.States.IN_PROGRESS
+                            if state.is_not_started():
+                                state.start_game()
                                 minefield.generate_mines(row_index, column_index)
                                 game_timer.start()
                             if event.button == 1:
                                 mines_in_neighbourhood = minefield.count_mined_neighbours(row_index, column_index)
-                                clicked = element.click(mines_in_neighbourhood, state_icon)
+                                clicked = element.click(mines_in_neighbourhood, state)
                                 if clicked:
-                                    minefield.uncover_neighbours(row_index, column_index, state_icon)   #Todo isn't this a bug if we will click on flag?
+                                    minefield.uncover_neighbours(row_index, column_index, state)   #Todo isn't this a bug if we will click on flag?
                                 minefield.is_game_won()
                                 if minefield.is_game_won():
-                                    state_icon.state = game_state.GameState.States.WON
-                                    minefield.uncover_whole_field(state_icon)
+                                    state.win_game()
+                                    minefield.uncover_whole_field(state)
                                     minefield.mines_counter.game_won()
                                     print("Game WON!!!")
                             elif event.button == 3:
                                 element.flag_marked()
                             print(minefield.flagged_mines)
 
-        if state_icon.state != game_state.GameState.States.IN_PROGRESS:
+        if not state.is_in_progress():
             game_timer.stop()
 
-        state_icon.draw()
+        state.draw()
 
         # flip() the display to put your work on screen
         pygame.display.flip()

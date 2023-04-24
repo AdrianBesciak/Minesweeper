@@ -1,6 +1,5 @@
 import pygame
 import resources
-import game_state
 
 
 class Element:
@@ -18,13 +17,13 @@ class Element:
     def draw(self, resource=resources.img_element):
         self.screen.blit(resource, self.rect)
 
-    def click(self, mined_neighbours, state_icon):
+    def click(self, mined_neighbours, state):
         if not self.clicked:
             self.clicked = True
             self.minefield.uncovered_fields += 1
             if self.mine:
-                game_state.state = game_state.GameState.States.FAILED
-                self.minefield.uncover_whole_field(state_icon)
+                state.fail_game()
+                self.minefield.uncover_whole_field(state)
                 self.draw(resources.img_mineClicked)
             else:
                 if mined_neighbours == 0:
@@ -47,10 +46,10 @@ class Element:
                     self.draw(resources.img_element8)
         return self.clicked
 
-    def final_click(self, state_icon):
+    def final_click(self, state):
         if self.clicked:
             return
-        if state_icon.state == game_state.GameState.States.WON:
+        if state.is_game_won():
             if self.mine:
                 self.draw(resources.img_flag)
         else:
