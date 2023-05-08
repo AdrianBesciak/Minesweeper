@@ -5,9 +5,7 @@ from MinesCounter import MinesCounter
 
 
 class Minefield:
-    def __init__(self, width, height, mines_amount, screen, font):
-        self.width = width
-        self.height = height
+    def __init__(self, mines_amount, screen, font):
         self.mines_counter = MinesCounter(mines_amount, screen, font)
         self.mines_amount = mines_amount
         self.flagged_mines = 0
@@ -16,45 +14,13 @@ class Minefield:
         self.generate_grid(screen)
 
     def generate_grid(self, screen):
-        for j in range(self.height):
-            line = []
-            for i in range(self.width):
-                element = Element(i, j, self.mines_counter, self, resources.element_size, resources.border, resources.top_border, screen=screen)
-                line.append(element)
-                element.draw()
-            self.grid.append(line)
+        raise NotImplementedError
 
     def generate_mines(self, excluded_i, excluded_j):
-        for _ in range(self.mines_amount):
-            i = excluded_i
-            j = excluded_j
-            while i == excluded_i and j == excluded_j and not self.grid[i][j].mine:
-                i = random.randrange(0, self.width)
-                j = random.randrange(0, self.height)
-            print('Mine: ', i, j)
-            self.grid[j][i].mine = True
+        raise NotImplementedError
 
     def get_neighbours(self, i, j):
-        neighbours = []
-        if i > 0:
-            if j > 0:
-                neighbours.append((i - 1, j - 1))
-            neighbours.append((i - 1, j))
-            if j < self.width - 1:
-                neighbours.append((i - 1, j + 1))
-
-        if j > 0:
-            neighbours.append((i, j - 1))
-        if j < self.width - 1:
-            neighbours.append((i, j + 1))
-
-        if i < self.height - 1:
-            if j > 0:
-                neighbours.append((i + 1, j - 1))
-            neighbours.append((i + 1, j))
-            if j < self.width - 1:
-                neighbours.append((i + 1, j + 1))
-        return neighbours
+        raise NotImplementedError
 
     def count_mined_neighbours(self, i, j):
         mined_neighbours = 0
@@ -79,6 +45,3 @@ class Minefield:
             for j in range(len(self.grid[i])):
                 self.grid[i][j].final_click(state)
                 self.uncover_neighbours(i, j, state)
-
-    def is_game_won(self):
-        return self.uncovered_fields == self.width * self.height - self.mines_amount

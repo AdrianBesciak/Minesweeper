@@ -2,7 +2,7 @@
 
 import pygame
 import resources
-from minefield import Minefield
+from rectangularminefield import RectangularMinefield
 from game_state import GameState
 from timer import Timer
 
@@ -23,7 +23,7 @@ game_timer = Timer(screen=screen, font=font)
 
 
 def game():
-    minefield = Minefield(field_width, field_height, mines_amount, screen, font)
+    minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
     game_timer.print()
     state = GameState(screen)
 
@@ -38,7 +38,7 @@ def game():
                 game_timer.update()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if state.is_clicked(event.pos) or state.is_finished():
-                    minefield = Minefield(field_width, field_height, mines_amount, screen, font)
+                    minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
                     game_timer.reset()
                     state.reset_game()
                     continue
@@ -56,7 +56,6 @@ def game():
                                 clicked = element.click(mines_in_neighbourhood, state)
                                 if clicked:
                                     minefield.uncover_neighbours(row_index, column_index, state)   #Todo isn't this a bug if we will click on flag?
-                                minefield.is_game_won()
                                 if minefield.is_game_won():
                                     state.win_game()
                                     minefield.uncover_whole_field(state)
