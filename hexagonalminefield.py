@@ -54,10 +54,14 @@ class HexagonalMinefield(Minefield):
     def get_neighbours(self, i, j):
         neighbours = []
         if i > 0:
-            if j > 0:
-                neighbours.append((i - 1, j - 1))
-            if j < self.layer_width(i-1):
+            if i < self.radius:
+                if j > 0:
+                    neighbours.append((i - 1, j - 1))
+                if j < self.layer_width(i-1):
+                    neighbours.append((i - 1, j))
+            else:
                 neighbours.append((i - 1, j))
+                neighbours.append((i - 1, j + 1))
 
         if j > 0:
             neighbours.append((i, j - 1))
@@ -65,10 +69,15 @@ class HexagonalMinefield(Minefield):
             neighbours.append((i, j + 1))
 
         if i < self.height - 1:
-            if j > 0:
-                neighbours.append((i + 1, j - 1))
-            if j < self.layer_width(i + 1):
+            if i < self.radius - 1:
                 neighbours.append((i + 1, j))
+                if j < self.layer_width(i + 1) - 1:
+                    neighbours.append((i + 1, j + 1))
+            else:
+                if j > 0:
+                    neighbours.append((i + 1, j - 1))
+                if j < self.layer_width(i + 1):
+                    neighbours.append((i + 1, j))
         return neighbours
 
     def is_game_won(self):
