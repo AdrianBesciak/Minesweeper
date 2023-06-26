@@ -6,6 +6,7 @@ from rectangularminefield import RectangularMinefield
 from hexagonalminefield import HexagonalMinefield
 from game_state import GameState
 from timer import Timer
+from Button import Button
 
 field_width = 30
 field_height = 16
@@ -23,9 +24,7 @@ font = pygame.font.SysFont('Consolas', 30)
 game_timer = Timer(screen=screen, font=font)
 
 
-def game():
-    # minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
-    minefield = HexagonalMinefield(10, mines_amount, screen, font)
+def game(minefield):
     game_timer.print()
     state = GameState(screen)
 
@@ -41,10 +40,10 @@ def game():
             elif event.type == pygame.MOUSEBUTTONUP:
                 if state.is_clicked(event.pos) or state.is_finished():
                     # minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
-                    minefield = HexagonalMinefield(10, mines_amount, screen, font)
+                    # minefield = HexagonalMinefield(10, mines_amount, screen, font)
                     game_timer.reset()
                     state.reset_game()
-                    continue
+                    return
                 for row in minefield.grid:
                     for element in row:
                         if element.rect.collidepoint(event.pos):
@@ -77,5 +76,37 @@ def game():
         pygame.display.flip()
 
 
-game()
-pygame.quit()
+def menu_start():
+    game_timer.reset()
+
+    def rectangular_game():
+        screen.fill((0, 0, 0))
+        game(RectangularMinefield(field_width, field_height, mines_amount, screen, font))
+
+    def hexagonal_game():
+        screen.fill((0, 0, 0))
+        game(HexagonalMinefield(10, mines_amount, screen, font))
+
+    button_width = 400
+    button_height = 100
+
+    rect_button = Button(screen, font, (display_width - button_width) // 2, (display_height - 150 - button_height) // 2, button_width, button_height, 'Rectangular field', rectangular_game)
+    hex_button = Button(screen, font, (display_width - button_width) // 2, (display_height + 150 - button_height) // 2, button_width, button_height, 'Hexagonal field', hexagonal_game)
+
+    while True:
+        screen.fill((0, 0, 0))
+        # limits FPS to 60
+        clock.tick(60) / 1000
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        rect_button.process()
+        hex_button.process()
+
+        # flip() the display to put your work on screen
+        pygame.display.flip()
+
+
+menu_start()
