@@ -3,12 +3,13 @@
 import pygame
 import resources
 from rectangularminefield import RectangularMinefield
+from hexagonalminefield import HexagonalMinefield
 from game_state import GameState
 from timer import Timer
 
 field_width = 30
 field_height = 16
-mines_amount = 10
+mines_amount = 20
 
 
 # pygame setup
@@ -23,7 +24,8 @@ game_timer = Timer(screen=screen, font=font)
 
 
 def game():
-    minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
+    # minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
+    minefield = HexagonalMinefield(10, mines_amount, screen, font)
     game_timer.print()
     state = GameState(screen)
 
@@ -38,7 +40,8 @@ def game():
                 game_timer.update()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if state.is_clicked(event.pos) or state.is_finished():
-                    minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
+                    # minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
+                    minefield = HexagonalMinefield(10, mines_amount, screen, font)
                     game_timer.reset()
                     state.reset_game()
                     continue
