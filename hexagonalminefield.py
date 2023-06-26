@@ -10,6 +10,7 @@ class HexagonalMinefield(Minefield):
         self.radius = radius
         self.a = 32
         self.height = self.field_height()
+        self.fields_amount = self.calculate_fields_amount()
         super().__init__(mines_amount, screen, font)
 
     def generate_grid(self, screen):
@@ -32,6 +33,13 @@ class HexagonalMinefield(Minefield):
         if layer < self.radius:
             return self.radius + layer
         return 3 * self.radius - layer - 2
+
+    def calculate_fields_amount(self):
+        amount = 0
+        for layer in range(self.field_height()):
+            amount += self.layer_width(layer)
+
+        return amount
 
     def generate_mines(self, excluded_layer, excluded_item):
         for _ in range(self.mines_amount):
@@ -64,5 +72,4 @@ class HexagonalMinefield(Minefield):
         return neighbours
 
     def is_game_won(self):
-        # return self.uncovered_fields == self.width * self.height - self.mines_amount
-        return False
+        return self.uncovered_fields == self.fields_amount - self.mines_amount
