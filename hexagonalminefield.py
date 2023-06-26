@@ -9,6 +9,7 @@ class HexagonalMinefield(Minefield):
     def __init__(self, radius, mines_amount, screen, font):
         self.radius = radius
         self.a = 32
+        self.height = self.field_height()
         super().__init__(mines_amount, screen, font)
 
     def generate_grid(self, screen):
@@ -18,7 +19,7 @@ class HexagonalMinefield(Minefield):
             print('Line width: ', self.layer_width(layer), 'layer: ', layer, 'offset: ', line_offset)
             for j in range(self.layer_width(layer)):
                 x = j + line_offset
-                y = (layer) / 3 * 2
+                y = layer / 3 * 2
                 element = Element(x, y, self.mines_counter, self, resources.element_size, resources.border, resources.top_border, screen=screen, icons=resources.HexagonalResources)
                 line.append(element)
                 element.draw(resources.HexagonalResources.img_element)  #ToDo fix drawing elements
@@ -44,25 +45,24 @@ class HexagonalMinefield(Minefield):
 
     def get_neighbours(self, i, j):
         neighbours = []
-        # if i > 0:
-        #     if j > 0:
-        #         neighbours.append((i - 1, j - 1))
-        #     neighbours.append((i - 1, j))
-        #     if j < self.width - 1:
-        #         neighbours.append((i - 1, j + 1))
-        #
-        # if j > 0:
-        #     neighbours.append((i, j - 1))
-        # if j < self.width - 1:
-        #     neighbours.append((i, j + 1))
-        #
-        # if i < self.height - 1:
-        #     if j > 0:
-        #         neighbours.append((i + 1, j - 1))
-        #     neighbours.append((i + 1, j))
-        #     if j < self.width - 1:
-        #         neighbours.append((i + 1, j + 1))
+        if i > 0:
+            if j > 0:
+                neighbours.append((i - 1, j - 1))
+            if j < self.layer_width(i-1):
+                neighbours.append((i - 1, j))
+
+        if j > 0:
+            neighbours.append((i, j - 1))
+        if j < self.layer_width(i) - 1:
+            neighbours.append((i, j + 1))
+
+        if i < self.height - 1:
+            if j > 0:
+                neighbours.append((i + 1, j - 1))
+            if j < self.layer_width(i + 1):
+                neighbours.append((i + 1, j))
         return neighbours
 
     def is_game_won(self):
-        return self.uncovered_fields == self.width * self.height - self.mines_amount
+        # return self.uncovered_fields == self.width * self.height - self.mines_amount
+        return False
