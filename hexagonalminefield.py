@@ -19,7 +19,6 @@ class HexagonalMinefield(Minefield):
             for j in range(self.layer_width(layer)):
                 x = j + line_offset
                 y = (layer) / 3 * 2
-                # print("({}, {})".format(x, y))
                 element = Element(x, y, self.mines_counter, self, resources.element_size, resources.border, resources.top_border, screen=screen, icons=resources.HexagonalResources)
                 line.append(element)
                 element.draw(resources.HexagonalResources.img_element)  #ToDo fix drawing elements
@@ -33,16 +32,15 @@ class HexagonalMinefield(Minefield):
             return self.radius + layer
         return 3 * self.radius - layer - 2
 
-    def generate_mines(self, excluded_i, excluded_j):
-        pass
-        # for _ in range(self.mines_amount):
-        #     i = excluded_i
-        #     j = excluded_j
-        #     while i == excluded_i and j == excluded_j and not self.grid[i][j].mine:
-        #         i = random.randrange(0, self.width)
-        #         j = random.randrange(0, self.height)
-        #     print('Mine: ', i, j)
-        #     self.grid[j][i].mine = True
+    def generate_mines(self, excluded_layer, excluded_item):
+        for _ in range(self.mines_amount):
+            layer = excluded_layer
+            item = excluded_item
+            while layer == excluded_layer and item == excluded_item and not self.grid[layer][item].mine:
+                layer = random.randrange(0, self.field_height())
+                item = random.randrange(0, self.layer_width(layer))
+            print('Mine: ', layer, item)
+            self.grid[layer][item].mine = True
 
     def get_neighbours(self, i, j):
         neighbours = []
