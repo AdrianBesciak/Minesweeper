@@ -15,9 +15,9 @@ class RectangularMinefield(Minefield):
         for j in range(self.height):
             line = []
             for i in range(self.width):
-                element = Element(i, j, self.mines_counter, self, resources.element_size, resources.border, resources.top_border, screen=screen)
+                element = Element(i, j, self.mines_counter, self, resources.element_size, resources.border, resources.top_border, screen=screen, icons=resources.RectangularResources)
                 line.append(element)
-                element.draw()
+                element.draw(resources.RectangularResources.img_element)
             self.grid.append(line)
 
     def generate_mines(self, excluded_i, excluded_j):

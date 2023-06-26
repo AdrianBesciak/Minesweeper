@@ -57,14 +57,14 @@ class GameState:
 
     def draw(self):
         if self.state == self.States.NOT_STARTED:
-            self.screen.blit(resources.img_big_element, self.rect)
-            self.screen.blit(resources.img_face_smiling, self.rect_face)
+            self.screen.blit(resources.ControlElementsResources.img_big_element, self.rect)
+            self.screen.blit(resources.ControlElementsResources.img_face_smiling, self.rect_face)
         elif self.state == self.States.IN_PROGRESS:
-            self.screen.blit(resources.img_face_considering, self.rect_face)
+            self.screen.blit(resources.ControlElementsResources.img_face_considering, self.rect_face)
         elif self.state == self.States.FAILED:
-            self.screen.blit(resources.img_face_dead, self.rect_face)
+            self.screen.blit(resources.ControlElementsResources.img_face_dead, self.rect_face)
         elif self.state == self.States.WON:
-            self.screen.blit(resources.img_face_sunglasses, self.rect_face)
+            self.screen.blit(resources.ControlElementsResources.img_face_sunglasses, self.rect_face)
 
     def is_clicked(self, click_position):
         return self.rect.collidepoint(click_position)
