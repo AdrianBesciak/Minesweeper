@@ -1,10 +1,19 @@
 from pygame import image
 
+
+class FieldParameters:
+    rectangular_field_width = 30
+    rectangular_field_height = 16
+    hex_side = 10
+    mines_amount = 50
+
+
 element_size = 32
 big_element_size = 64
 face_size = 50
 border = 16
 top_border = 100
+font_size = 30
 
 
 class RectangularResources:

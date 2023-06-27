@@ -8,19 +8,15 @@ from game_state import GameState
 from timer import Timer
 from Button import Button
 
-field_width = 30
-field_height = 16
-mines_amount = 20
-
 
 # pygame setup
 pygame.init()
-display_width = resources.element_size * field_width + resources.border * 2
-display_height = resources.element_size * field_height + resources.border + resources.top_border
+display_width = resources.element_size * resources.FieldParameters.rectangular_field_width + resources.border * 2
+display_height = resources.element_size * resources.FieldParameters.rectangular_field_height + resources.border + resources.top_border
 screen = pygame.display.set_mode((display_width, display_height))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Minesweeper")
-font = pygame.font.SysFont('Consolas', 30)
+font = pygame.font.SysFont('Consolas', resources.font_size)
 game_timer = Timer(screen=screen, font=font)
 
 
@@ -39,8 +35,6 @@ def game(minefield):
                 game_timer.update()
             elif event.type == pygame.MOUSEBUTTONUP:
                 if state.is_clicked(event.pos) or state.is_finished():
-                    # minefield = RectangularMinefield(field_width, field_height, mines_amount, screen, font)
-                    # minefield = HexagonalMinefield(10, mines_amount, screen, font)
                     game_timer.reset()
                     state.reset_game()
                     return
@@ -81,11 +75,11 @@ def menu_start():
 
     def rectangular_game():
         screen.fill((0, 0, 0))
-        game(RectangularMinefield(field_width, field_height, mines_amount, screen, font))
+        game(RectangularMinefield(resources.FieldParameters.rectangular_field_width, resources.FieldParameters.rectangular_field_height, resources.FieldParameters.mines_amount, screen, font))
 
     def hexagonal_game():
         screen.fill((0, 0, 0))
-        game(HexagonalMinefield(10, mines_amount, screen, font))
+        game(HexagonalMinefield(resources.FieldParameters.hex_side, resources.FieldParameters.mines_amount, screen, font))
 
     button_width = 400
     button_height = 100
